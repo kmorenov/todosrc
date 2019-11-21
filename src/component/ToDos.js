@@ -5,9 +5,16 @@ import URL_POSTS from '../api/constants'
 
 // import axios from 'axios';
 
+import TextToDo from './TextToDo'
+
+
 const ToDos = () => {
+    const [editedToDo, setEditedToDo] = useState(-1)
     const [todos, setTodos] = useState([])
     const formRef = React.useRef(null);
+
+
+    // const titleRef = React.useRef()
 
     const getTodos = useCallback(() => {
         return fetch(URL_POSTS)
@@ -55,30 +62,41 @@ const ToDos = () => {
             body: JSON.stringify({'title': data.get('title'), 'author': data.get('author'), 'done': data.get('done')})
         })
             .then(res => res.json())
-            .then(res => console.log(res, 'qqq1111')||setTodos([...todos, res]))
+            .then(res => console.log(res, 'qqq1111') || setTodos([...todos, res]))
             .catch(err => alert(err))
-/*       axios to check later
-        axios({
-            method: 'post',
-            url: 'http://localhost:3000/posts/',
-            data: {
-                ...data, 'title': data.get('title'), 'author': data.get('author'), 'done': data.get('done')}
-            })
-            .then(res => res.json())
-            .then(res => setTodos(res))*/
+        /*       axios to check later
+                axios({
+                    method: 'post',
+                    url: 'http://localhost:3000/posts/',
+                    data: {
+                        ...data, 'title': data.get('title'), 'author': data.get('author'), 'done': data.get('done')}
+                    })
+                    .then(res => res.json())
+                    .then(res => setTodos(res))*/
+    }
+
+    const setEdited = (index) => {
+        setEditedToDo(index)
     }
 
     return (
+
         <div>
             <form ref={formRef} onSubmit={onSubmit}>
-                Title: <input type="text" name="title"/>
-                Author: <input type="text" name="author"/>
-                Done: <input type="checkbox" name="done" value="Done"/>
+                <span className="col-1">Title: <input type="text" name="title"/></span>
+                <span className="col-5">Author: <input type="text" name="author"/></span>
+                <span className="col-6">Done: <input type="checkbox" name="done" value="Done"/></span>
                 <button type="submit"> Add ToDo</button>
             </form>
-            <table>
-                <tr>
-                    {todos.map((todo, index) => (
+            <div className="row">
+                <span className="col-1">ID</span>
+                <span className="col-1">Title</span>
+                <span className="col-4">Author</span>
+                <span className="col-2 text-left">Done </span>
+            </div>
+
+            {todos.map((todo, index) =>
+                    index == editedToDo ?
                         <ToDo
                             id={todo.id}
                             name={todo.title}
@@ -90,10 +108,22 @@ const ToDos = () => {
                             onCheckChange={toggleDone}
                             updateDeletedState={updateDeletedState}
                         />
-                    ))}
-                </tr>
-            </table>
+                        :
+                        <span onClick={() => setEdited(index)}>
+                            <TextToDo
+                                si
+                                id={todo.id}
+                                name={todo.title}
+                                index={index}
+                                value={todo.title}
+                                author={todo.author}
+                                done={todo.done}
+                            />
+                        </span>
+            )
+            }
         </div>
+
     )
 }
 export default ToDos

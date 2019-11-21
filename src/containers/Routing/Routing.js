@@ -8,8 +8,7 @@ import {Switch, BrowserRouter as Router, Route, Link, Redirect} from 'react-rout
 
 const Routing = () => {
     return (<Router>
-        <Link to="/">Home</Link>
-        <Link to="/about">About</Link>
+        <span><Link to="/">Home</Link> <Link to="/about">About</Link></span>
         <Switch>
             <Route exact path={'/about'} component={About}/>
             <Route path={'/404'} component={NotFound}/>

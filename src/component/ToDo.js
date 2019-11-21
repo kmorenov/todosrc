@@ -46,30 +46,27 @@ class ToDo extends React.Component {
             body: JSON.stringify({done: change, "author": "km", "title": value})
         })
             .then(res => res.json())
-            // .then(res => setTodos(res))
-            .then(res => console.log(res))
             .catch(err => alert(err))
-        /*}else{
-            alert('Your update has been cancelled.')
-        }*/
     }
 
     render() {
         return (<div id="wrapper" className="container">
             {console.log(this.props)}
             <form>
-                <tr>{this.props.id}
-                    <td><input
-                        size={20}
+
+                <div className="row">
+                    <span className="col-1">{this.props.id}</span>
+                    <span className="col-4 row"><input
                         key={this.props.id}
                         value={this.props.value}
                         name={this.props.name}
                         index={this.props.index}
                         onChange={(ev) => this.props.onChange(ev, this.props.index)}
                         type="text"
-                    /></td>
-                    <td>{this.props.author}</td>
-                    <td><input
+                    />
+                    </span>
+                    <span  className="col-2">{this.props.author}</span>
+                    <span className="col-2"><input
                         type="checkbox"
                         name="done"
                         checked={this.props.done ? "true" : ""}
@@ -78,7 +75,7 @@ class ToDo extends React.Component {
                             this.onCheckboxChange(event, this.props.id, this.props.done, this.props.value)
                         }
                         }
-                    /></td>
+                    /></span>
                     <button
                         onClick={() => this.onUpdate(window.event, this.props.id, this.props.value, this.props.done)}>Save
                     </button>
@@ -88,7 +85,8 @@ class ToDo extends React.Component {
                     }
                     }>Delete
                     </button>
-                </tr>
+                </div>
+
             </form>
         </div>)
     }

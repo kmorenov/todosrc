@@ -1,7 +1,6 @@
 import React from 'react';
 import './App.css';
 
-import ToDos from './component/ToDos'
 import Routing from './containers/Routing/Routing'
 
 
