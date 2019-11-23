@@ -69,7 +69,7 @@ const ToDos = (props) => {
             body: JSON.stringify({'title': data.get('title'), 'author': data.get('author'), 'done': data.get('done')})
         })
             .then(res => res.json())
-            .then(res => props.addTodo([todos], [res]))
+            .then(res => props.addTodo([res]))
             // .then(res => setTodos([...todos, res]))
             .catch(err => alert(err))
         /*       axios to check later
