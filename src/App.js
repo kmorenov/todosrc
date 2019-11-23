@@ -3,15 +3,29 @@ import './App.css';
 
 import Routing from './containers/Routing/Routing'
 
+import {createStore, applyMiddleware, compose} from 'redux'
+import {Provider} from 'react-redux'
+import thunkMiddleware from 'redux-thunk'
+
+import todos from './reducers/todos'
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(todos,
+    composeEnhancers(applyMiddleware(
+        thunkMiddleware,
+    )))
+
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-       <Routing/>
-      </header>
-    </div>
-  );
+    return (
+        <Provider store={store}>
+            <div className="App">
+                <header className="App-header">
+                    <Routing/>
+                </header>
+            </div>
+        </Provider>
+    );
 }
 
 export default App;

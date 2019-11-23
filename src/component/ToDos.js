@@ -1,16 +1,22 @@
 import React, {useCallback, useEffect, useState} from 'react'
+import {connect} from 'react-redux'
 import ToDo from "./ToDo";
 // import getTodos from '../api/api'
 import URL_POSTS from '../api/constants'
+
 
 // import axios from 'axios';
 
 import TextToDo from './TextToDo'
 
+import addTodo from '../actions/todos'
 
-const ToDos = () => {
+
+const ToDos = (props) => {
+    console.log(props);
     const [editedToDo, setEditedToDo] = useState(-1)
     const [todos, setTodos] = useState([])
+
     const formRef = React.useRef(null);
 
 
@@ -20,7 +26,8 @@ const ToDos = () => {
         return fetch(URL_POSTS)
             .then((response) => response.json())
             .then((response) => {
-                setTodos(response)
+                props.addTodo(response ) //{'title': 'test t', 'author': 'test a', 'done': 'test done'}) //
+                // setTodos(response)
             })
     }, []);
 
@@ -62,7 +69,8 @@ const ToDos = () => {
             body: JSON.stringify({'title': data.get('title'), 'author': data.get('author'), 'done': data.get('done')})
         })
             .then(res => res.json())
-            .then(res => console.log(res, 'qqq1111') || setTodos([...todos, res]))
+            .then(res => props.addTodo([todos], [res]))
+            // .then(res => setTodos([...todos, res]))
             .catch(err => alert(err))
         /*       axios to check later
                 axios({
@@ -94,8 +102,8 @@ const ToDos = () => {
                 <span className="col-4">Author</span>
                 <span className="col-2 text-left">Done </span>
             </div>
-
-            {todos.map((todo, index) =>
+            {console.log('props BEFORE map:', props)}
+            {props.todos && props.todos.map((todo, index) =>
                     index == editedToDo ?
                         <ToDo
                             id={todo.id}
@@ -126,4 +134,18 @@ const ToDos = () => {
 
     )
 }
-export default ToDos
+
+const mapStateToProps = (state) => {
+    console.log('mapStateToprops: ', state.todos)
+    // [todos] = state
+    return {
+        todos: state.todos
+    }
+}
+
+const mapDispatchToProps = ({
+    addTodo
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(ToDos)
+// export default ToDos
