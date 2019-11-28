@@ -32,7 +32,7 @@ class ToDo extends React.Component {
         }
     }
 
-    onCheckboxChange = (event, id, checked, value) => {
+    onCheckboxChange = (event, {id, checked, value}) => {
         let change = checked == 'Done' ? '' : 'Done'
         alert('Changes submitted to JSON server')
         fetch(URL_POSTS + `${id}`, {
@@ -71,7 +71,7 @@ class ToDo extends React.Component {
                             checked={this.props.done ? 1 : ""}
                             onChange={(event) => {
                                 this.props.toggleDone(this.props.index)
-                                this.onCheckboxChange(event, this.props.id, this.props.done, this.props.value)
+                                this.onCheckboxChange(event, this.props)
                         }
                         }
                     /></span>
