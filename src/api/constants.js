@@ -1,2 +1,2 @@
-const URL_POSTS = 'http://localhost:3000/posts/'
-export default URL_POSTS
+const API_URL = process.env.REACT_APP_API_URL;
+export default API_URL;

@@ -1,8 +1,9 @@
 import {ADD_TODO, REMOVE_TODO, EDIT_TODO, TOGGLE_DONE} from '../actions/todos'
 
 // let generatedId = 0
-const initState = [] //{todos : [{'title': 'test t', 'author': 'test a', 'done': ''}]}
-export default function todoApp(state = initState, action) {
+const initialState = [] //{todos : [{'title': 'test t', 'author': 'test a', 'done': ''}]}
+
+export default function todoApp(state = initialState, action) {
     switch (action.type) {
         case ADD_TODO: {
             const newState = [
