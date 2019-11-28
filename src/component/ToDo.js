@@ -1,22 +1,22 @@
 import React, {useState} from 'react'
-
+import {connect} from "react-redux";
 import URL_POSTS from '../api/constants'
+import {editTodo, removeTodo, toggleDone} from "../actions/todos";
 
 class ToDo extends React.Component {
 
     onDelete = (event, id) => {
         event.preventDefault()
-        const res = window.confirm(`Delete id: ${id}?`)
+        const res = window.confirm(`Permanently delete id: ${id} from backend?`)
         if (res) {
             fetch(URL_POSTS + `${id}`, {
                 method: 'DELETE'
             })
                 .then(res => res.json())
-                .then(res => console.log(res))
         }
     }
 
-    onUpdate = (event, id, value, done) => {
+    onUpdate = (event, {id, value, done}) => {
         event.preventDefault()
         const res = window.confirm(`Update id: ${id}?`)
         if (res) {
@@ -28,15 +28,12 @@ class ToDo extends React.Component {
                 body: JSON.stringify({"author": "km", "title": value, "done": done})
             })
                 .then(res => res.json())
-                .then(res => console.log("res: ", res))
                 .catch(err => alert(err))
         }
     }
 
     onCheckboxChange = (event, id, checked, value) => {
         let change = checked == 'Done' ? '' : 'Done'
-        /*        // const res = window.confirm(`Update id: ${id}?`)
-                   // if (res) {*/
         alert('Changes submitted to JSON server')
         fetch(URL_POSTS + `${id}`, {
             method: 'PUT',
@@ -51,36 +48,38 @@ class ToDo extends React.Component {
 
     render() {
         return (<div id="wrapper" className="container">
-            {console.log(this.props)}
             <form>
-
                 <div className="row">
                     <span className="col-1">{this.props.id}</span>
-                    <span className="col-4 row"><input
-                        key={this.props.id}
-                        value={this.props.value}
-                        name={this.props.name}
-                        index={this.props.index}
-                        onChange={(ev) => this.props.onChange(ev, this.props.index)}
-                        type="text"
-                    />
+                    <span className="col-4 row">
+                        <input
+                            type="text"
+                            key={this.props.id}
+                            value={this.props.value}
+                            name={this.props.name}
+                            onChange={(ev) => this.props.editTodo({
+                                title: ev.target.value,
+                                index: this.props.index,
+                            })}
+                        />
                     </span>
-                    <span  className="col-2">{this.props.author}</span>
-                    <span className="col-2"><input
-                        type="checkbox"
-                        name="done"
-                        checked={this.props.done ? "true" : ""}
-                        onChange={(event) => {
-                            this.props.onCheckChange(event, this.props.index)
-                            this.onCheckboxChange(event, this.props.id, this.props.done, this.props.value)
+                    <span className="col-2">{this.props.author}</span>
+                    <span className="col-2">
+                        <input
+                            type="checkbox"
+                            name="done"
+                            checked={this.props.done ? 1 : ""}
+                            onChange={(event) => {
+                                this.props.toggleDone(this.props.index)
+                                this.onCheckboxChange(event, this.props.id, this.props.done, this.props.value)
                         }
                         }
                     /></span>
                     <button
-                        onClick={() => this.onUpdate(window.event, this.props.id, this.props.value, this.props.done)}>Save
+                        onClick={() => this.onUpdate(window.event, this.props)}>Save
                     </button>
                     <button onClick={(event) => {
-                        this.props.updateDeletedState(this.props.index)
+                        this.props.removeTodo(this.props.id)
                         this.onDelete(event, this.props.id)
                     }
                     }>Delete
@@ -92,4 +91,16 @@ class ToDo extends React.Component {
     }
 }
 
-export default ToDo
+const mapStateToProps = (state) => {
+    return {
+        todos: state,
+    }
+}
+
+const mapDispatchToProps = (dispatch) => ({
+    editTodo: payload => dispatch(editTodo(payload)),
+    removeTodo: id => dispatch(removeTodo(id)),
+    toggleDone: index => dispatch(toggleDone(index))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(ToDo)
