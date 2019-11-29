@@ -1,56 +1,52 @@
-import React, {useCallback, useEffect, useState} from 'react'
-import {connect} from 'react-redux'
-import ToDo from "./ToDo";
-// import getTodos from '../api/api'
-import URL_POSTS from '../api/constants'
-
+// Core
+import React, {
+    useCallback, useEffect, useRef, useState,
+} from 'react';
+import { connect } from 'react-redux';
+import * as PropTypes from 'prop-types';
+// Components
+import ToDo from './ToDo';
 import TextToDo from './TextToDo'
-
+// Api
+import Api from '../api/api';
+// Actions
 import { addTodo } from '../actions/todos'
 
 
 const ToDos = (props) => {
-    const { addTodo, removeTodo } = props;
-    const [editedToDo, setEditedToDo] = useState(-1)
-    const [todos, setTodos] = useState([])
-
-    const formRef = React.useRef(null);
+    const { addTodo, todos } = props;
+    const [editedToDo, setEditedToDo] = useState(-1);
+    const formRef = useRef(null);
 
     const getTodos = useCallback(() => {
-        return fetch(URL_POSTS)
-            .then((response) => response.json())
-            .then((response) => {
-                addTodo(response)
-            })
+        Api.getTodos().then(addTodo);
     }, [addTodo]);
 
     useEffect(() => {
         getTodos()
-    }, [getTodos])
+    }, [getTodos]);
 
 
     const onSubmit = (event) => {
-        event.preventDefault()
-        // console.dir(event.target, 'qqqqq');
-        const data = new FormData(event.target);
-        fetch(URL_POSTS, {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json; charset=UTF-8' // Indicates the content
-            },
-            body: JSON.stringify({'title': data.get('title'), 'author': data.get('author'), 'done': data.get('done')})
-        })
-            .then(res => res.json())
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+
+        const data = {
+            title: formData.get('title'),
+            author: formData.get('author'),
+            done: formData.get('done'),
+        };
+
+        Api.addTodo(data)
             .then(res => props.addTodo([res]))
-            .catch(err => alert(err))
-    }
+    };
 
     const setEdited = (index) => {
         setEditedToDo(index)
-    }
+    };
 
     return (
-
         <div>
             <form ref={formRef} onSubmit={onSubmit}>
                 <span className="col-1">Title: <input type="text" name="title"/></span>
@@ -65,10 +61,10 @@ const ToDos = (props) => {
                 <span className="col-2 text-left">Done </span>
             </div>
 
-            {props.todos && props.todos.map((todo, index) =>
-                index == editedToDo ?
+            {todos.map((todo, index) =>
+                index === editedToDo ? (
                     <ToDo
-                        key={index}
+                        key={todo.id}
                         id={todo.id}
                         name={todo.title}
                         index={index}
@@ -76,32 +72,39 @@ const ToDos = (props) => {
                         author={todo.author}
                         done={todo.done}
                     />
-                    :
+                ) : (
                     <span key={index} onClick={() => setEdited(index)}>
-                            <TextToDo
-                                id={todo.id}
-                                name={todo.title}
-                                index={index}
-                                value={todo.title}
-                                author={todo.author}
-                                done={todo.done}
-                            />
-                        </span>
+                        <TextToDo
+                            id={todo.id}
+                            name={todo.title}
+                            index={index}
+                            value={todo.title}
+                            author={todo.author}
+                            done={todo.done}
+                        />
+                    </span>
+                )
             )
             }
         </div>
 
     )
-}
+};
 
-const mapStateToProps = (state) => {
-    return {
-        todos: state,
-    }
-}
+ToDos.propTypes = {
+    todos: PropTypes.arrayOf(),
+};
 
-const mapDispatchToProps = (dispatch) => ({
+ToDos.defaultProps = {
+    todos: [],
+};
+
+const mapStateToProps = (state) => ({
+    todos: state,
+});
+
+const mapDispatchToProps = dispatch => ({
     addTodo: todos => dispatch(addTodo(todos)),
-})
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(ToDos)
