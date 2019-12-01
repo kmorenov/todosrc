@@ -1,32 +1,30 @@
 {
   "posts": [
     {
+      "index": 0,
       "author": "km",
-      "title": "Serega's fixes 23",
+      "done": true,
+      "title": "Serega's fixes 23t87",
       "id": 1
     },
     {
-      "done": "",
+      "index": 1,
       "author": "km",
-      "title": "the Cup day",
+      "done": false,
+      "title": "the Cup day 1974",
       "id": 2
     },
     {
-      "title": "page route test",
+      "index": 3,
       "author": "km",
-      "done": null,
-      "id": 3
-    },
-    {
-      "done": "Done",
-      "author": "km",
-      "title": "t2433",
+      "done": false,
+      "title": "new thingy",
       "id": 4
     },
     {
-      "author": "km",
-      "title": "newest testic",
-      "done": true,
+      "title": "page route test",
+      "author": "kmore",
+      "done": null,
       "id": 5
     }
   ],
