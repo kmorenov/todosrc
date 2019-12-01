@@ -1,4 +1,4 @@
-import {ADD_TODO, REMOVE_TODO, EDIT_TODO, TOGGLE_DONE} from '../actions/todos'
+import {ADD_TODO, REMOVE_TODO, EDIT_TODO, TOGGLE_DONE, ADD_TODOS_BULK} from '../actions/todos'
 
 // let generatedId = 0
 const initialState = [] //{todos : [{'title': 'test t', 'author': 'test a', 'done': ''}]}
@@ -16,7 +16,6 @@ export default function todoApp(state = initialState, action) {
             const index = state.findIndex(({id}) => id === action.payload)
             const newState = state.slice()
             newState.splice(index, 1)
-
             return newState
         }
         case EDIT_TODO: {
@@ -30,6 +29,9 @@ export default function todoApp(state = initialState, action) {
             const index = action.payload
             newState[index].done = !newState[index].done
             return newState
+        }
+        case ADD_TODOS_BULK: {
+            return[...state, ...action.payload]
         }
         default:
             return state

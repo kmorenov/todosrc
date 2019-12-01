@@ -42,8 +42,8 @@ const ToDos = (props) => {
             .then(res => props.addTodo([res]))
     };
 
-    const setEdited = (index) => {
-        setEditedToDo(index)
+    const setEdited = (id) => {
+        setEditedToDo(id)
     };
 
     return (
@@ -53,6 +53,7 @@ const ToDos = (props) => {
                 <span className="col-5">Author: <input type="text" name="author"/></span>
                 <span className="col-6">Done: <input type="checkbox" name="done" value="Done"/></span>
                 <button type="submit"> Add ToDo</button>
+                <button onClick={() => props.getTodosFromServer}> Add ToDo from Server</button>
             </form>
             <div className="row">
                 <span className="col-1">ID</span>
@@ -62,7 +63,7 @@ const ToDos = (props) => {
             </div>
 
             {todos.map((todo, index) =>
-                index === editedToDo ? (
+                todo.id === editedToDo ? (
                     <ToDo
                         key={todo.id}
                         id={todo.id}
@@ -73,8 +74,9 @@ const ToDos = (props) => {
                         done={todo.done}
                     />
                 ) : (
-                    <span key={index} onClick={() => setEdited(index)}>
+                    <span key={todo.id} onClick={() => setEdited(todo.id)}>
                         <TextToDo
+                            // key={todo.id}
                             id={todo.id}
                             name={todo.title}
                             index={index}

@@ -6,46 +6,49 @@ import Api from '../api/api';
 import { editTodo, removeTodo, toggleDone } from '../actions/todos';
 
 class ToDo extends Component {
-    onDelete = (event, id) => {
-        event.preventDefault();
+
+    onDelete = (id) => {
+        // const {id} = this.props.id //DOES NOT WORK
         const res = window.confirm(`Permanently delete id: ${id} from backend?`);
 
         if (res) {
-            Api.deleteTodo(id);
+            Api.deleteTodo(id)
+                .then(this.props.removeTodo(id))
         }
     };
 
-    onUpdate = (event) => {
-        event.preventDefault();
-        const { id, value, done } = this.props;
+    onUpdate = () => {
+        const { index, id, value, done } = this.props;
         const res = window.confirm(`Update id: ${id}?`);
 
         if (res) {
             const data = {
+                index,
                 author: 'km',
                 done: done,
                 title: value,
             };
             Api.updateTodo(id, data)
-              .then(this.editTodo);
+              .then(this.editTodo)
         }
     };
 
-    onCheckboxChange = (event, id, checked, value) => {
-        const change = checked === 'Done' ? '' : 'Done';
+    onCheckboxChange = () => {
+        const { id, index, value, done, toggleDone } = this.props //km
         const data = {
+            index,
             author: 'km',
-            done: change,
+            done: !done,
             title: value,
         };
         Api.updateTodo(id, data)
-          .then(this.editTodo);
+          .then(toggleDone(index))  //this.editTodo)
     };
 
     onChange = (ev) => {
-        const { editTodo, id, index } = this.props;
+        const { editTodo, index } = this.props;
         const { value } = ev.target;
-        editTodo(id, { index, title: value });
+        editTodo({ index, title: value }); //Serega's editTodo(id, { index, title: value });
     };
 
     editTodo = (data) => {
@@ -76,22 +79,16 @@ class ToDo extends Component {
                     <span className="col-2">
                         <input
                             type="checkbox"
-                            name="done"
-                            checked={done ? 1 : ''}
-                            onChange={(event) => {
-                                this.props.toggleDone(this.props.index);
-                                this.onCheckboxChange(event, this.props.id, this.props.done, this.props.value)
-                            }}
+                            name="cbox"
+                            checked={done}
+                            onChange={this.onCheckboxChange}
                         />
                     </span>
                     <button onClick={this.onUpdate}>
                         Save
                     </button>
                     <button
-                      onClick={(event) => {
-                        this.props.removeTodo(id);
-                        this.onDelete(event, id);
-                      }}
+                      onClick={() => this.onDelete(id)}
                     >
                         Delete
                     </button>
