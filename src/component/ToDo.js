@@ -7,9 +7,9 @@ import { editTodo, removeTodo, toggleDone } from '../actions/todos';
 
 class ToDo extends Component {
 
-    onDelete = (id) => {
-        // const {id} = this.props.id //DOES NOT WORK
-        const res = window.confirm(`Permanently delete id: ${id} from backend?`);
+    onDelete = () => {
+        const {id} = this.props
+        const res = window.confirm(`Permanently delete id: ${id} from backend?`)
 
         if (res) {
             Api.deleteTodo(id)
@@ -18,14 +18,14 @@ class ToDo extends Component {
     };
 
     onUpdate = () => {
-        const { index, id, value, done } = this.props;
+        const { index, id, value, done, author } = this.props;
         const res = window.confirm(`Update id: ${id}?`);
 
         if (res) {
             const data = {
                 index,
-                author: 'km',
-                done: done,
+                author,
+                done,
                 title: value,
             };
             Api.updateTodo(id, data)
@@ -34,15 +34,15 @@ class ToDo extends Component {
     };
 
     onCheckboxChange = () => {
-        const { id, index, value, done, toggleDone } = this.props //km
+        const { id, index, value, done, toggleDone, author } = this.props //km
         const data = {
             index,
-            author: 'km',
+            author,
             done: !done,
             title: value,
         };
         Api.updateTodo(id, data)
-          .then(toggleDone(index))  //this.editTodo)
+          .then(toggleDone(index))  //.then(dispatch(toggleDone(index))) dispatch can't be used outside MapDispatchToprops?
     };
 
     onChange = (ev) => {
@@ -88,7 +88,7 @@ class ToDo extends Component {
                         Save
                     </button>
                     <button
-                      onClick={() => this.onDelete(id)}
+                      onClick={this.onDelete}
                     >
                         Delete
                     </button>
