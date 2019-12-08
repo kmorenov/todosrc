@@ -2,7 +2,7 @@ import React from 'react'
 
 import classnames from 'classnames'
 
-const TextToDo = ({id, value, author, done}) => {
+const TextToDo = ({id, title, author, done}) => {
 
     const stylesText = classnames('col-3', 'row', {
         'text-muted font-italic' : done,
@@ -13,9 +13,9 @@ const TextToDo = ({id, value, author, done}) => {
         <form>
             <div className="row" bgcolor="white" >
                 <span className="col-1">{id}</span>
-                <span className={stylesText}>{value}</span>
+                <span className={stylesText}>{title}</span>
                 <span className="col-2 row">{author}</span>
-                <span className="col-2 row">{done ? "Yes" : "No"}</span>
+                <span className="col-2 row">{done ? 'Yes' : 'No'}</span>
             </div>
         </form>
     </div>)
