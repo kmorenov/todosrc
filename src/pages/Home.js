@@ -1,5 +1,5 @@
 import React from 'react'
-import ToDos from "../component/ToDos";
+import ToDos from "../component/ToDoList";
 
 const Home = () => {
     return <ToDos/>

@@ -21,6 +21,20 @@ class Api {
             .catch(err => alert(err));
     }
 
+    addTodoFromBackend(data){
+        alert('Got into addTodo in api')
+
+        return fetch(API_URL + '/posts', {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8' // Indicates the content
+            },
+            body: JSON.stringify(data)
+        }).then(res => res.json())
+            .then(alert('added ToDo to backend'))
+            .catch(err => alert(err));
+    }
+
     deleteTodo(id) {
         return fetch(`${API_URL}/posts/${id}`, {
             method: 'DELETE',

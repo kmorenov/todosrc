@@ -1,0 +1,194 @@
+Index: src/component/ToDo.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/component/ToDo.js	(date 1575114756000)
++++ src/component/ToDo.js	(date 1575114756000)
+@@ -1,106 +1,114 @@
+-import React, {useState} from 'react'
+-import {connect} from "react-redux";
+-import URL_POSTS from '../api/constants'
+-import {editTodo, removeTodo, toggleDone} from "../actions/todos";
++// Core
++import React, { Component } from 'react';
++import { connect } from 'react-redux';
++// Api
++import Api from '../api/api';
++import { editTodo, removeTodo, toggleDone } from '../actions/todos';
+ 
+-class ToDo extends React.Component {
+-
++class ToDo extends Component {
+     onDelete = (event, id) => {
+-        event.preventDefault()
+-        const res = window.confirm(`Permanently delete id: ${id} from backend?`)
++        event.preventDefault();
++        const res = window.confirm(`Permanently delete id: ${id} from backend?`);
++
+         if (res) {
+-            fetch(URL_POSTS + `${id}`, {
+-                method: 'DELETE'
+-            })
+-                .then(res => res.json())
++            Api.deleteTodo(id);
+         }
+-    }
++    };
+ 
+-    onUpdate = (event, {id, value, done}) => {
+-        event.preventDefault()
+-        const res = window.confirm(`Update id: ${id}?`)
++    onUpdate = (event) => {
++        event.preventDefault();
++        const { id, value, done } = this.props;
++        const res = window.confirm(`Update id: ${id}?`);
++
+         if (res) {
+-            fetch(URL_POSTS + `${id}`, {
+-                method: 'PUT',
+-                headers: {
+-                    'Content-type': 'application/json; charset=UTF-8' // Indicates the content
+-                },
+-                body: JSON.stringify({"author": "km", "title": value, "done": done})
+-            })
+-                .then(res => res.json())
+-                .catch(err => alert(err))
++            const data = {
++                author: 'km',
++                done: done,
++                title: value,
++            };
++            Api.updateTodo(id, data)
++              .then(this.editTodo);
+         }
+-    }
++    };
+ 
+-    onCheckboxChange = (event, {id, checked, value}) => {
+-        let change = checked == 'Done' ? '' : 'Done'
+-        alert('Changes submitted to JSON server')
+-        fetch(URL_POSTS + `${id}`, {
+-            method: 'PUT',
+-            headers: {
+-                'Content-type': 'application/json; charset=UTF-8' // Indicates the content
+-            },
+-            body: JSON.stringify({done: change, "author": "km", "title": value})
+-        })
+-            .then(res => res.json())
+-            .catch(err => alert(err))
+-    }
++    onCheckboxChange = (event, id, checked, value) => {
++        const change = checked === 'Done' ? '' : 'Done';
++        const data = {
++            author: 'km',
++            done: change,
++            title: value,
++        };
++        Api.updateTodo(id, data)
++          .then(this.editTodo);
++    };
++
++    onChange = (ev) => {
++        const { editTodo, id, index } = this.props;
++        const { value } = ev.target;
++        editTodo(id, { index, title: value });
++    };
++
++    editTodo = (data) => {
++        const { editTodo } = this.props;
++        editTodo(data);
++    };
+ 
+     render() {
+-        return (<div id="wrapper" className="container">
++        const {
++            author, done, name, id, value,
++        } = this.props;
++
++        return (
++          <div id="wrapper" className="container">
+             <form>
+                 <div className="row">
+-                    <span className="col-1">{this.props.id}</span>
++                    <span className="col-1">{id}</span>
+                     <span className="col-4 row">
+                         <input
+                             type="text"
+-                            key={this.props.id}
+-                            value={this.props.value}
+-                            name={this.props.name}
+-                            onChange={(ev) => this.props.editTodo({
+-                                title: ev.target.value,
+-                                index: this.props.index,
+-                            })}
++                            key={id}
++                            value={value}
++                            name={name}
++                            onChange={this.onChange}
+                         />
+                     </span>
+-                    <span className="col-2">{this.props.author}</span>
++                    <span className="col-2">{author}</span>
+                     <span className="col-2">
+                         <input
+                             type="checkbox"
+                             name="done"
+-                            checked={this.props.done ? 1 : ""}
++                            checked={done ? 1 : ''}
+                             onChange={(event) => {
+-                                this.props.toggleDone(this.props.index)
+-                                this.onCheckboxChange(event, this.props)
+-                        }
+-                        }
+-                    /></span>
++                                this.props.toggleDone(this.props.index);
++                                this.onCheckboxChange(event, this.props.id, this.props.done, this.props.value)
++                            }}
++                        />
++                    </span>
++                    <button onClick={this.onUpdate}>
++                        Save
++                    </button>
+                     <button
+-                        onClick={() => this.onUpdate(window.event, this.props)}>Save
+-                    </button>
+-                    <button onClick={(event) => {
+-                        this.props.removeTodo(this.props.id)
+-                        this.onDelete(event, this.props.id)
+-                    }
+-                    }>Delete
++                      onClick={(event) => {
++                        this.props.removeTodo(id);
++                        this.onDelete(event, id);
++                      }}
++                    >
++                        Delete
+                     </button>
+                 </div>
+-
+             </form>
+         </div>)
+     }
+ }
+ 
+-const mapStateToProps = (state) => {
+-    return {
+-        todos: state,
+-    }
+-}
++const mapStateToProps = state => ({
++    todos: state,
++});
+ 
+-const mapDispatchToProps = (dispatch) => ({
++const mapDispatchToProps = dispatch => ({
+     editTodo: payload => dispatch(editTodo(payload)),
+     removeTodo: id => dispatch(removeTodo(id)),
+     toggleDone: index => dispatch(toggleDone(index))
+-})
++});
+ 
+-export default connect(mapStateToProps, mapDispatchToProps)(ToDo)
+\ No newline at end of file
++export default connect(mapStateToProps, mapDispatchToProps)(ToDo)

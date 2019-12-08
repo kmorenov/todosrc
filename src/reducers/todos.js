@@ -20,7 +20,7 @@ export default function todoApp(state = initialState, action) {
         }
         case EDIT_TODO: {
             const newState = state.slice()
-            const {index, title } = action.payload
+            const { index, title } = action.payload
             newState[index].title = title
             return newState
         }
@@ -31,7 +31,8 @@ export default function todoApp(state = initialState, action) {
             return newState
         }
         case ADD_TODOS_BULK: {
-            return[...state, ...action.payload]
+            console.log('actION: ', action.payload)
+            return [...state, action.payload]
         }
         default:
             return state

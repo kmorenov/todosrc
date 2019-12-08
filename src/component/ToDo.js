@@ -5,10 +5,10 @@ import { connect } from 'react-redux';
 import Api from '../api/api';
 import { editTodo, removeTodo, toggleDone } from '../actions/todos';
 
-class ToDo extends Component {
 
+class ToDo extends Component {
     onDelete = () => {
-        const {id} = this.props
+        const { id } = this.props.todo
         const res = window.confirm(`Permanently delete id: ${id} from backend?`)
 
         if (res) {
@@ -18,7 +18,8 @@ class ToDo extends Component {
     };
 
     onUpdate = () => {
-        const { index, id, value, done, author } = this.props;
+        const { todo, index } = this.props
+        const { id, title, done, author } = todo
         const res = window.confirm(`Update id: ${id}?`);
 
         if (res) {
@@ -26,7 +27,7 @@ class ToDo extends Component {
                 index,
                 author,
                 done,
-                title: value,
+                title
             };
             Api.updateTodo(id, data)
               .then(this.editTodo)
@@ -34,21 +35,21 @@ class ToDo extends Component {
     };
 
     onCheckboxChange = () => {
-        const { id, index, value, done, toggleDone, author } = this.props //km
+        const { todo, toggleDone, index } = this.props
+        const { id, title, done, author } = todo
         const data = {
             index,
             author,
             done: !done,
-            title: value,
+            title
         };
         Api.updateTodo(id, data)
           .then(toggleDone(index))  //.then(dispatch(toggleDone(index))) dispatch can't be used outside MapDispatchToprops?
     };
 
     onChange = (ev) => {
-        const { editTodo, index } = this.props;
-        const { value } = ev.target;
-        editTodo({ index, title: value }); //Serega's editTodo(id, { index, title: value });
+        const { todo, editTodo, index } = this.props
+        editTodo({ index, title: ev.target.value })
     };
 
     editTodo = (data) => {
@@ -57,30 +58,28 @@ class ToDo extends Component {
     };
 
     render() {
-        const {
-            author, done, name, id, value,
-        } = this.props;
+        const { todo } = this.props;
 
         return (
           <div id="wrapper" className="container">
             <form>
                 <div className="row">
-                    <span className="col-1">{id}</span>
+                    <span className="col-1">{todo.id}</span>
                     <span className="col-4 row">
                         <input
                             type="text"
-                            key={id}
-                            value={value}
-                            name={name}
+                            key={todo.id}
+                            value={todo.title}
+                            name={todo.name}
                             onChange={this.onChange}
                         />
                     </span>
-                    <span className="col-2">{author}</span>
+                    <span className="col-2">{todo.author}</span>
                     <span className="col-2">
                         <input
                             type="checkbox"
                             name="cbox"
-                            checked={done}
+                            checked={todo.done}
                             onChange={this.onCheckboxChange}
                         />
                     </span>
