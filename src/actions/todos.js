@@ -1,5 +1,6 @@
 import Api from '../api/api';
 // Actions
+import { asyncTypes } from '../reducers/asyncTypes';
 export const ADD_TODO = 'ADD_TODO'
 export const REMOVE_TODO = 'REMOVE_TODO'
 export const EDIT_TODO = 'EDIT_TODO'
@@ -14,18 +15,9 @@ export const addTodo = (text) => dispatch => {
     })
 }
 
-export const getTodosFromServer = () => async dispatch => {
-    const todos = await fetch('https://jsonplaceholder.typicode.com/todos/4')
-        .then(todos => todos.json())
-        .then(todos =>
-            dispatch({
-                type: ADD_TODOS_BULK,
-                payload: {title: todos.title, author: 'json-server', id: 'no id'}
-            }))
-        .then(todos => //console.log('mytodos', todos))
-            Api.saveTodoFromJsonServer({title: todos.payload.title, author: todos.payload.author}))
-}
-
+export const getTodosFromServer = () => ({
+    type: asyncTypes.GET_TODOS_FROM_SERVER_ASYNC,
+});
 
 export const removeTodo = (id) => dispatch => {
     dispatch({
