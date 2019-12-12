@@ -21,10 +21,8 @@ class Api {
             .catch(err => alert(err));
     }
 
-    addTodoFromBackend(data){
-        alert('Got into addTodo in api')
-
-        return fetch(API_URL + '/posts', {
+    saveTodoFromJsonServer(data) {
+        fetch(API_URL + '/posts', {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json; charset=UTF-8' // Indicates the content

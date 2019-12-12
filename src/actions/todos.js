@@ -15,16 +15,15 @@ export const addTodo = (text) => dispatch => {
 }
 
 export const getTodosFromServer = () => async dispatch => {
-    debugger
-    const todos = await fetch('https://jsonplaceholder.typicode.com/todos/1')
+    const todos = await fetch('https://jsonplaceholder.typicode.com/todos/4')
         .then(todos => todos.json())
         .then(todos =>
             dispatch({
-                    type: ADD_TODOS_BULK,
-                    payload: {title: todos.title, author: 'kmv2'}
-                }))
+                type: ADD_TODOS_BULK,
+                payload: {title: todos.title, author: 'json-server', id: 'no id'}
+            }))
         .then(todos => //console.log('mytodos', todos))
-            Api.addTodoFromBackend({ title: todos.payload.title, author: todos.payload.author }))
+            Api.saveTodoFromJsonServer({title: todos.payload.title, author: todos.payload.author}))
 }
 
 
@@ -36,7 +35,6 @@ export const removeTodo = (id) => dispatch => {
 }
 
 export const editTodo = (payload) => dispatch => {
-    console.log('dispatch: ', dispatch)
     dispatch({
         type: EDIT_TODO,
         payload: payload
