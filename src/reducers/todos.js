@@ -31,7 +31,7 @@ export default function todoApp(state = initialState, action) {
             return newState
         }
         case ADD_TODOS_BULK: {
-            console.log('actION: ', action.payload)
+            alert('ADD BULK to state')
             return [...state, action.payload]
         }
         default:
