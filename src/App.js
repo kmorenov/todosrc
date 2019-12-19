@@ -3,16 +3,14 @@ import './App.css';
 
 import Routing from './containers/Routing/Routing'
 
-import {createStore, applyMiddleware, compose} from 'redux'
-import {Provider} from 'react-redux'
+import { createStore, applyMiddleware, compose } from 'redux'
+import { Provider } from 'react-redux'
 import thunkMiddleware from 'redux-thunk'
-import {all, call, takeLatest, put} from 'redux-saga/effects';
+import { all, call } from 'redux-saga/effects';
 import createSagaMiddleware from 'redux-saga';
 
 import todos from './reducers/todos'
-import {watchersTodos, callShowSpinner} from './reducers/watchers';
-import {asyncTypes} from "./reducers/asyncTypes";
-import {SHOW_SPINNER_ASYNC} from "./actions/todos";
+import { watchersTodos } from './reducers/watchers';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const sagaMiddleWare = createSagaMiddleware();
@@ -23,7 +21,6 @@ const store = createStore(todos,
 );
 
 function* rootSaga() {
-    yield takeLatest(asyncTypes.SHOW_SPINNER_ASYNC, callShowSpinner)
     // TODO: add more watchers;
     yield all([
         call(watchersTodos),
@@ -34,6 +31,7 @@ function* rootSaga() {
 sagaMiddleWare.run(rootSaga);
 
 function App() {
+    console.log('Rendering...');
     return (
         <Provider store={store}>
             <div className="App">
