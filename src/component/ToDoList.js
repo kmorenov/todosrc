@@ -2,7 +2,7 @@
 import React, {
     useCallback, useEffect, useRef, useState, useReducer
 } from 'react';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import * as PropTypes from 'prop-types';
 // Components
 import ToDo from './ToDo';
@@ -10,7 +10,7 @@ import TextToDo from './TextToDo'
 // Api
 import Api from '../api/api';
 // Actions
-import { addTodo, getTodosFromServer } from '../actions/todos'
+import { addTodoAction, getTodosFromServer, showSpinnerAction } from '../actions/todos'
 
 const initialState = {
     author: '',
@@ -43,27 +43,27 @@ function reducer(state, action) {
 }
 
 const ToDoList = (props) => {
-    const { addTodo, todos, getTodosFromServer } = props;
+    const { addTodoBtn, todos, getTodosFromServer, showSpinner } = props;
     const [ editedToDo, setEditedToDo ] = useState(-1);
     const formRef = useRef(null);
 
-    const [state, dispatch] = useReducer(reducer, initialState);
+    const [ state, dispatch ] = useReducer(reducer, initialState);
 
     const getTodos = useCallback(() => {
-        Api.getTodos().then(addTodo);
-    }, [addTodo]);
+        Api.getTodos().then(addTodoBtn);
+    }, [addTodoBtn]);
 
     useEffect(() => {
-        getTodos()
+        getTodos() //loadBackend() 16/12/19
     }, [getTodos]);
 
-    useEffect(() => {
-        // Logic
-        // Did mount === Did update
-        return () => {
-            // Unmount
-        };
-    }, []);
+    /*    useEffect(() => {
+            // Logic
+            // Did mount === Did update
+            return () => {
+                // Unmount
+            };
+        }, []);*/
 
 
     const onSubmit = (event) => {
@@ -77,8 +77,8 @@ const ToDoList = (props) => {
             done: formData.get('done'),
         };
 
-        Api.addTodo(data)
-            .then(res => addTodo([res]))
+        Api.addTodoButtton(data)
+            .then(res => addTodoBtn([res]))
             .then(dispatch({type: 'afterSubmit'}))
 
     };
@@ -97,18 +97,6 @@ const ToDoList = (props) => {
 
     const onGetDataFromServer = (event) => {
         event.preventDefault();
-
-/*
-        const data = {
-            title: formData.get('title'),
-            author: formData.get('author'),
-            done: formData.get('done'),
-        };
-
-        Api.addTodo(data)
-            .then(res => addTodo([res]))
-            .then(dispatch({type: 'afterSubmit'}))
-*/
         getTodosFromServer()
     }
 
@@ -123,6 +111,7 @@ const ToDoList = (props) => {
                                                      onChange={onDoneChange}/></span>
                 <button type="submit"> Add ToDo</button>
                 <button onClick={(event) => onGetDataFromServer(event)}> Add ToDo from Server</button>
+                <button onClick={() => showSpinner('')}> Add Saga Todos</button>
             </form>
             <div className="row">
                 <span className="col-1">ID</span>
@@ -130,7 +119,6 @@ const ToDoList = (props) => {
                 <span className="col-4">Author</span>
                 <span className="col-2 text-left">Done</span>
             </div>
-
             {todos && todos.map((todo, index) =>
                 todo.id === editedToDo ? (
                     <ToDo key={todo.id} todo={todo} index={index}/>
@@ -164,8 +152,9 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    addTodo: todos => dispatch(addTodo(todos)),
-    getTodosFromServer: todos => dispatch(getTodosFromServer(todos))
+    addTodoBtn: todos => dispatch(addTodoAction(todos)),
+    getTodosFromServer: todos => dispatch(getTodosFromServer(todos)),
+    showSpinner: text => dispatch(showSpinnerAction(text))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ToDoList)

@@ -10,7 +10,7 @@ class Api {
             .catch(err => alert(err));
     }
 
-    addTodo(data) {
+    addTodoButtton(data) {
         return fetch(API_URL + '/posts', {
             method: 'POST',
             headers: {

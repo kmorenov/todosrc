@@ -1,19 +1,25 @@
 import Api from '../api/api';
 // Actions
-import { asyncTypes } from '../reducers/asyncTypes';
+import {asyncTypes} from '../reducers/asyncTypes';
+
 export const ADD_TODO = 'ADD_TODO'
 export const REMOVE_TODO = 'REMOVE_TODO'
 export const EDIT_TODO = 'EDIT_TODO'
 export const TOGGLE_DONE = 'TOGGLE_DONE'
 export const ADD_TODOS_BULK = 'ADD_TODOS_BULK'
+export const SHOW_SPINNER_ASYNC = 'SHOW_SPINNER_ASYNC'
 
-
-export const addTodo = (text) => dispatch => {
-    dispatch({
+export const addTodoAction = (text) => {
+    return {
         type: ADD_TODO,
         payload: text
-    })
+    }
 }
+
+export const showSpinnerAction = () => ({
+    type: asyncTypes.SHOW_SPINNER_ASYNC,
+    // payload: text
+})
 
 export const getTodosFromServer = () => ({
     type: asyncTypes.GET_TODOS_FROM_SERVER_ASYNC,

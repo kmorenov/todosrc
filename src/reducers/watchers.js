@@ -6,7 +6,9 @@ import {
 import Api from '../api/api';
 // Types
 import { asyncTypes } from './asyncTypes';
-import { ADD_TODOS_BULK } from '../actions/todos';
+import {ADD_TODOS_BULK, SHOW_SPINNER_ASYNC} from '../actions/todos';
+
+let generatedId = 100
 
 function* callGetTodosFromServer() {
   const todos = yield fetch('https://jsonplaceholder.typicode.com/todos/4')
@@ -40,4 +42,17 @@ export function* watchersTodos() {
   yield all([
     call(watchGetTodosFromServer),
   ]);
+}
+
+export function* callShowSpinner() {
+  if (window.confirm('in callShowSpinner')){
+    const action = {
+      type: SHOW_SPINNER_ASYNC,
+      payload: {author: 'callShowSpinner',
+                id: generatedId++,
+                title: 'Saga trial'}
+    };
+
+    yield put(action);
+  }
 }

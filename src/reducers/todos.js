@@ -1,7 +1,13 @@
-import {ADD_TODO, REMOVE_TODO, EDIT_TODO, TOGGLE_DONE, ADD_TODOS_BULK} from '../actions/todos'
+import {ADD_TODO, REMOVE_TODO, EDIT_TODO, TOGGLE_DONE, ADD_TODOS_BULK, SHOW_SPINNER_ASYNC} from '../actions/todos'
+import api from '../api/api'
 
-// let generatedId = 0
-const initialState = [] //{todos : [{'title': 'test t', 'author': 'test a', 'done': ''}]}
+const initialState = [] //() => {
+//     return api.getTodos()
+//         .then(todos => {
+//             console.log('inside reducer then: ', initialState = todos)
+//              return initialState = todos
+//         })   //[{'title': 'test t', 'author': 'test a', 'done': ''}]
+// }
 
 export default function todoApp(state = initialState, action) {
     switch (action.type) {
@@ -20,7 +26,7 @@ export default function todoApp(state = initialState, action) {
         }
         case EDIT_TODO: {
             const newState = state.slice()
-            const { index, title } = action.payload
+            const {index, title} = action.payload
             newState[index].title = title
             return newState
         }
@@ -31,8 +37,10 @@ export default function todoApp(state = initialState, action) {
             return newState
         }
         case ADD_TODOS_BULK: {
-            alert('ADD BULK to state')
             return [...state, action.payload]
+        }
+        case SHOW_SPINNER_ASYNC: {
+            return [...state]
         }
         default:
             return state
