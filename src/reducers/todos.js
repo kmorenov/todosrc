@@ -1,4 +1,4 @@
-import {ADD_TODO, REMOVE_TODO, EDIT_TODO, TOGGLE_DONE, ADD_TODOS_BULK, SHOW_SPINNER_ASYNC} from '../actions/todos'
+import { ADD_TODO, REMOVE_TODO, EDIT_TODO, TOGGLE_DONE, ADD_TODOS_BULK, SET_SHOW_SPINNER } from '../actions/todos'
 import api from '../api/api'
 
 const initialState = [] //() => {
@@ -39,8 +39,8 @@ export default function todoApp(state = initialState, action) {
         case ADD_TODOS_BULK: {
             return [...state, action.payload]
         }
-        case SHOW_SPINNER_ASYNC: {
-            return [...state]
+        case SET_SHOW_SPINNER: {
+            return [...state, action.payload]
         }
         default:
             return state

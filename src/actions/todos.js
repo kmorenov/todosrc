@@ -8,6 +8,7 @@ export const EDIT_TODO = 'EDIT_TODO'
 export const TOGGLE_DONE = 'TOGGLE_DONE'
 export const ADD_TODOS_BULK = 'ADD_TODOS_BULK'
 export const SHOW_SPINNER_ASYNC = 'SHOW_SPINNER_ASYNC'
+export const SET_SHOW_SPINNER = 'SET_SHOW_SPINNER'
 
 export const addTodoAction = (text) => {
     return {
@@ -17,7 +18,7 @@ export const addTodoAction = (text) => {
 }
 
 export const showSpinnerAction = () => ({
-    type: asyncTypes.SHOW_SPINNER_ASYNC,
+    type: asyncTypes.SET_SHOW_SPINNER,
     // payload: text
 })
 
