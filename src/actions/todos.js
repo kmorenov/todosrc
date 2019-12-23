@@ -18,8 +18,7 @@ export const addTodoAction = (text) => {
 }
 
 export const showSpinnerAction = () => ({
-    type: asyncTypes.SET_SHOW_SPINNER,
-    // payload: text
+    type: asyncTypes.SHOW_SPINNER_ASYNC,
 })
 
 export const getTodosFromServer = () => ({

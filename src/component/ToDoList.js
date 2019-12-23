@@ -68,7 +68,6 @@ const ToDoList = (props) => {
 
     const onSubmit = (event) => {
         event.preventDefault();
-
         const formData = new FormData(event.target);
 
         const data = {
@@ -100,6 +99,8 @@ const ToDoList = (props) => {
         getTodosFromServer()
     }
 
+
+
     return (
         <div>
             <form ref={formRef} onSubmit={onSubmit}>
@@ -111,7 +112,7 @@ const ToDoList = (props) => {
                                                      onChange={onDoneChange}/></span>
                 <button type="submit"> Add ToDo</button>
                 <button onClick={(event) => onGetDataFromServer(event)}> Add ToDo from Server</button>
-                <button onClick={() => showSpinner('')}> Add Saga Todos</button>
+                <button onClick={(event) => {event.preventDefault(); showSpinner(event)}}> Add Saga Todos</button>
             </form>
             <div className="row">
                 <span className="col-1">ID</span>
@@ -154,7 +155,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = dispatch => ({
     addTodoBtn: todos => dispatch(addTodoAction(todos)),
     getTodosFromServer: todos => dispatch(getTodosFromServer(todos)),
-    showSpinner: text => dispatch(showSpinnerAction(text))
+    showSpinner: todos => dispatch(showSpinnerAction(todos))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ToDoList)

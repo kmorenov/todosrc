@@ -10,6 +10,8 @@ import { asyncTypes } from './asyncTypes';
 
 import {ADD_TODOS_BULK, SET_SHOW_SPINNER} from '../actions/todos';
 
+// import { takeEvery } from 'redux-saga/effects';
+
 let generatedId = 100
 
 function* callGetTodosFromServer() {
@@ -57,13 +59,28 @@ export function* watchersTodos() {
   ]);
 }
 
-export function* callShowSpinner() {
+export function* callShowSpinner(event) {
+  // event.preventDefault()
+
+  const todos = yield fetch(`https://jsonplaceholder.typicode.com/todos/${generatedId}`)
+      .then(res => res.json())
+      .catch(console.error);
+
+  const data = {
+    author: `jserver: ${generatedId}`,
+    title: todos.title,
+  };
+
+  generatedId++
+
+  const todoItem = yield call(Api.saveTodoFromJsonServer, data);
+
   const action = {
     type: SET_SHOW_SPINNER,
     payload: {
-      author: 'callShowSpinner',
-      id: generatedId++,
-      title: 'Saga trial',
+      author: todoItem.author,
+      id: todoItem.id,
+      title: todoItem.title,
     }
   };
 

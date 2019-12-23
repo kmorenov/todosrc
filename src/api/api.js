@@ -31,7 +31,7 @@ class Api {
         })
           .then(res => res.json())
         .then((data) => {
-            alert('added ToDo to backend');
+            // alert('added ToDo to backend');
             return data;
         })
         .catch(err => alert(err));
